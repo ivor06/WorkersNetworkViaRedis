@@ -1,0 +1,17 @@
+{
+  "name": "WorkersNetworkVidRedis",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "node dist/app"
+  },
+  "dependencies": {
+    "redis": "^2.7.1",
+    "bluebird": "^3.1.1"
+  },
+  "devDependencies": {
+    "@types/redis": "^2.6.0",
+    "@types/bluebird": "^3.5.8",
+    "typescript": "^2.2.2",
+    "tslint": "~4.5.1"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "extends": "tslint:latest",
+  "rules": {
+    "arrow-parens": false,
+    "curly": false,
+    "interface-name": false,
+    "forin": false,
+    "label-position": true,
+    "max-line-length": [
+      true,
+      200
+    ],
+    "member-access": false,
+    "member-ordering": [true],
+    "new-parens": false,
+    "no-arg": true,
+    "no-console": false,
+    "no-construct": true,
+    "no-debugger": true,
+    "no-duplicate-key": true,
+    "no-duplicate-variable": true,
+    "no-empty": false,
+    "no-empty-interface": false,
+    "no-eval": true,
+    "no-inferrable-types": true,
+    "no-internal-module": false,
+    "no-namespace": false,
+    "no-null-keyword": false,
+    "no-reference": false,
+    "no-require-imports": true,
+    "no-string-literal": false,
+    "no-trailing-whitespace": false,
+    "no-unreachable": true,
+    "no-unused-expression": false,
+    "no-unused-variable": false,
+    "no-var-requires": true,
+    "no-var-keyword": true,
+    "object-literal-key-quotes": false,
+    "object-literal-sort-keys": false,
+    "one-line": [
+      true,
+      "check-open-brace",
+      "check-whitespace"
+    ],
+    "one-variable-per-declaration": false,
+    "only-arrow-functions": false,
+    "ordered-imports": false,
+    "quotemark": [
+      true
+    ],
+    "radix": false,
+    "semicolon": true,
+    "switch-default": false,
+    "trailing-comma": [
+      true,
+      {
+        "multiline": "never",
+        "singleline": "never"
+      }
+    ],
+    "triple-equals": [
+      true,
+      "allow-null-check"
+    ],
+    "typedef": false,
+    "typedef-whitespace": [
+      true,
+      {
+        "index-signature": "nospace",
+        "parameter": "nospace"
+      }
+    ],
+    "variable-name": false
+  }
+}
