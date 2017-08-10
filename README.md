@@ -1,5 +1,5 @@
 # WorkersNetworkViaRedis
-Network of process messages workers via Redis
+Network of process message workers via Redis
 
 # Quickstart:
 
