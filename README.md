@@ -1,15 +1,22 @@
 # WorkersNetworkViaRedis
 Network of process message workers via Redis
 
-# Quickstart:
+# HowTo:
 
 1) Install node.js and npm: https://nodejs.org/en/download/
 2) Install and start Redis server: https://redis.io/topics/quickstart
 3) Clone this repository: "git clone git@github.com/ivor06/WorkersNetworkViaRedis"
 4) Install dependencies: "npm install"
-5) Compile typescript files: ./node_modules/.bin/tsc
-6) Run worker spawn: "npm start" or "node dist/app"
-7) Run worker for errors handling: "node dist/worker getErrors"
+5) Run worker spawn process: "npm start" or directly run workers: "node dist/worker"
+
+If it necessary to change something follow nex steps:
+
+6) Change files in "src/ directory"
+7) Compile typescript files: "./node_modules/.bin/tsc"
+
+For extract errors from Redis
+
+8) Run "node dist/worker getErrors"
 
 # The task was:
 Задача написать приложение, работающее с redis, умеющее как генерировать сообщения, так и обрабатывать. Параллельно может быть запущено сколько угодно приложений.

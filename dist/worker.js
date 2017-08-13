@@ -3,19 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const redis_1 = require("redis");
 const bluebird = require("bluebird");
 const config_1 = require("./config");
-bluebird.promisifyAll(redis_1.RedisClient.prototype);
-bluebird.promisifyAll(redis_1.Multi.prototype);
 const PID = process.pid.toString();
 const redisClient = redis_1.createClient(config_1.REDIS_OPTIONS);
-redisClient.on("error", error => {
-    console.error(error);
-    quit();
-});
 let processedMessagesCounter = 0, isIAmTheGenerator = false;
-console.log(`\nworker (pid ${PID}) started`);
-if (process.argv[2] && process.argv[2] === "getErrors")
-    getErrors()
-        .then(quit);
+init();
 mainLoop()
     .catch(quit);
 async function mainLoop() {
@@ -102,4 +93,16 @@ function preparePhilosophicalQuestion() {
 function quit() {
     redisClient.quit();
     process.exit(0);
+}
+function init() {
+    bluebird.promisifyAll(redis_1.RedisClient.prototype);
+    bluebird.promisifyAll(redis_1.Multi.prototype);
+    redisClient.on("error", error => {
+        console.error(error);
+        quit();
+    });
+    console.log(`\nworker (pid ${PID}) started`);
+    if (process.argv[2] && process.argv[2] === "getErrors")
+        getErrors()
+            .then(quit);
 }

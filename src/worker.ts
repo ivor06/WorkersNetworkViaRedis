@@ -12,27 +12,15 @@ import {
     ERROR_PERCENT
 } from "./config";
 
-bluebird.promisifyAll(RedisClient.prototype);
-bluebird.promisifyAll(Multi.prototype);
-
 const PID = process.pid.toString();
 
 const redisClient = createClient(REDIS_OPTIONS) as RedisClientAsyncable;
-
-redisClient.on("error", error => {
-    console.error(error);
-    quit();
-});
 
 let
     processedMessagesCounter = 0,
     isIAmTheGenerator = false;
 
-console.log(`\nworker (pid ${PID}) started`);
-
-if (process.argv[2] && process.argv[2] === "getErrors")
-    getErrors()
-        .then(quit);
+init();
 
 mainLoop()
     .catch(quit);
@@ -137,4 +125,20 @@ function preparePhilosophicalQuestion() {
 function quit() {
     redisClient.quit();
     process.exit(0);
+}
+
+function init() {
+    bluebird.promisifyAll(RedisClient.prototype);
+    bluebird.promisifyAll(Multi.prototype);
+
+    redisClient.on("error", error => {
+        console.error(error);
+        quit();
+    });
+
+    console.log(`\nworker (pid ${PID}) started`);
+
+    if (process.argv[2] && process.argv[2] === "getErrors")
+        getErrors()
+            .then(quit);
 }
