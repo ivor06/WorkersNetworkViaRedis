@@ -35,16 +35,16 @@ async function mainLoop() {
 
 async function startElectionOfGenerator() {
     try {
-        redisClient.watch("generatorPID");
-        if (await redisClient.pttlAsync("generatorPID") <= 0) {
+        redisClient.watch("generatorPID"); // Optimistic locking: only one of workers would set generatorPID with expire time
+        if (await redisClient.pttlAsync("generatorPID") <= 0) { // Checking if generatorPID captured already
             await redisClient
-                .multi([
-                    ["setex", "generatorPID", CAPTURE_GENERATOR_DELAY, PID]
+                .multi([ // Capturing of generatorPID
+                    ["setex", "generatorPID", CAPTURE_GENERATOR_DELAY, PID] // Only one of workers returns not-null-result cause optimistic locking
                 ])
                 .execAsync()
             && await startGenerateMessages();
         } else
-            redisClient.unwatch();
+            redisClient.unwatch(); // Too late: someone already captured generatorPID
     } catch (e) {
         console.error(`worker (pid ${PID}) capture generatorPID transaction failed`);
     }
@@ -61,7 +61,7 @@ async function startGenerateMessages() {
 }
 
 async function processGenerateMessages() {
-    await redisClient.expireAsync("generatorPID", CAPTURE_GENERATOR_DELAY);
+    await redisClient.expireAsync("generatorPID", CAPTURE_GENERATOR_DELAY); // Prolonging of generatorPID capture
     await redisClient.lpushAsync("messageList", await generateMessage());
 }
 
@@ -71,10 +71,8 @@ async function getMessage() {
     if (messageItem && messageItem[1])
         message = messageItem[1];
 
-    if (message) {
-        await redisClient.incrAsync("processedMessagesAmount");
+    if (message)
         await processMessage(message);
-    }
 }
 
 async function isGeneratorAlive(): Promise<boolean> {
@@ -123,22 +121,22 @@ function preparePhilosophicalQuestion() {
 }
 
 function quit() {
-    redisClient.quit();
+    // redisClient.quit(); // Application suddenly crashes, we can't quit gracefully, isn't it? :)
     process.exit(0);
 }
 
 function init() {
-    bluebird.promisifyAll(RedisClient.prototype);
-    bluebird.promisifyAll(Multi.prototype);
+    bluebird.promisifyAll(RedisClient.prototype); // Promisify Redis client
+    bluebird.promisifyAll(Multi.prototype); // Now promise-returning functions available, such as "getAsync"
 
     redisClient.on("error", error => {
         console.error(error);
         quit();
     });
 
-    console.log(`\nworker (pid ${PID}) started`);
-
     if (process.argv[2] && process.argv[2] === "getErrors")
         getErrors()
             .then(quit);
+
+    console.log(`\nworker (pid ${PID}) started`);
 }
